@@ -1,4 +1,4 @@
-#include "stm32f0xx.h"
+#include "stm32g0xx.h"
 #include <stdint.h>
 #include "app_bsp.h"
 

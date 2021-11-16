@@ -1,22 +1,22 @@
 #Nombre del proyecto
 TARGET = temp
 #Archivos a compilar
-SRCS  = main.c app_ints.c app_msps.c startup_stm32f072xb.c system_stm32f0xx.c 
-SRCS += stm32f0xx_hal.c stm32f0xx_hal_cortex.c stm32f0xx_hal_rcc.c stm32f0xx_hal_flash.c
-SRCS += stm32f0xx_hal_gpio.c
+SRCS  = main.c app_ints.c app_msps.c startup_stm32g0b1xx.s system_stm32g0xx.c 
+SRCS += stm32g0xx_hal.c stm32g0xx_hal_cortex.c stm32g0xx_hal_rcc.c stm32g0xx_hal_flash.c
+SRCS += stm32g0xx_hal_gpio.c
 #archivo linker a usar
 LINKER = linker.ld
 #Simbolos gloobales del programa (#defines globales)
-SYMBOLS = -DSTM32F072xB -DUSE_HAL_DRIVER
+SYMBOLS = -DSTM32G0B1xx -DUSE_HAL_DRIVER
 #directorios con archivos a compilar (.c y .s)
 SRC_PATHS  = app
-SRC_PATHS += cmsisf0/startups
-SRC_PATHS += half0/Src
+SRC_PATHS += cmsisg0/startups
+SRC_PATHS += halg0/Src
 #direcotrios con archivos .h
 INC_PATHS  = app
-INC_PATHS += cmsisf0/core
-INC_PATHS += cmsisf0/registers
-INC_PATHS += half0/Inc
+INC_PATHS += cmsisg0/core
+INC_PATHS += cmsisg0/registers
+INC_PATHS += halg0/Inc
 
 #compilador y opciones de compilacion
 TOOLCHAIN = arm-none-eabi
@@ -29,6 +29,8 @@ LFLAGS = $(CPU) -Wl,--gc-sections --specs=rdimon.specs --specs=nano.specs -Wl,-M
 
 #substituccion de prefijos y postfijos 
 OBJS = $(SRCS:%.c=Build/obj/%.o)
+OBJS := $(OBJS:%.s=Build/obj/%.o)
+
 DEPS = $(OBJS:%.o=%.d)
 VPATH = $(SRC_PATHS)
 INCLS = $(addprefix -I ,$(INC_PATHS))
@@ -59,13 +61,15 @@ build :
 clean :
 	rm -rf Output
 
-#Programar al tarjeta
+#---flash the image into the mcu-------------------------------------------------------------------
 flash :
-	openocd -f interface/stlink-v2-1.cfg -f target/stm32f0x.cfg -c "program Build/$(TARGET).hex verify reset" -c shutdown
-#Conectar OpenOCD con al Tarjeta
-open :
-	openocd -f interface/stlink-v2-1.cfg -f target/stm32f0x.cfg -c "reset_config srst_only srst_nogate"
-#Lanzar sesion de debug (es necesario primero Conectar la tarjeta con OpenOCD)
-debug :
-	$(TOOLCHAIN)-gdb Build/$(TARGET).elf -iex "set auto-load safe-path /"
+	openocd -f interface/stlink.cfg -f target/stm32g0x.cfg -c "program Build/$(TARGET).hex verify reset" -c shutdown
 
+#---open a debug server conection------------------------------------------------------------------
+open :
+#	openocd -f interface/stlink.cfg -f target/stm32g0x.cfg -c "reset_config srst_only srst_nogate"
+	JLinkGDBServer -if SWD -device stm32g0b1re -nogui
+
+#---launch a debug session, NOTE: is mandatory to previously open a debug server session-----------
+debug :
+	arm-none-eabi-gdb Build/$(TARGET).elf -iex "set auto-load safe-path /"

@@ -6,15 +6,9 @@ set height 0
 set width 0
 
 #---connect and load program
-target remote localhost:3333
+target remote localhost:2331
 #mon arm semihosting enable
 load
-mon reset halt
+mon reset
 break main
 continue
-
-define reset
-    mon reset halt
-end
-
-
