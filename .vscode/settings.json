@@ -1,0 +1,21 @@
+{
+    "files.associations": {
+        "stm32g0xx.h": "c",
+        "stm32g0xx_hal.h": "c",
+        "stm32g0xx_hal_conf.h": "c",
+        "app_clock.h": "c",
+        "app_bsp.h": "c",
+        "stm32g0xx_hal_rtc.h": "c",
+        "stdio.h": "c",
+        "stm32g0xx_hal_uart.h": "c",
+        "app_serial.h": "c",
+        "stdint.h": "c",
+        "lcd.h": "c",
+        "buffer.h": "c",
+        "variant": "c",
+        "cstring": "c",
+        "queue.h": "c",
+        "chrono": "c",
+        "random": "c"
+    }
+}

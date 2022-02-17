@@ -3,7 +3,10 @@ TARGET = temp
 #Archivos a compilar
 SRCS  = main.c app_ints.c app_msps.c startup_stm32g0b1xx.s system_stm32g0xx.c 
 SRCS += stm32g0xx_hal.c stm32g0xx_hal_cortex.c stm32g0xx_hal_rcc.c stm32g0xx_hal_flash.c
-SRCS += stm32g0xx_hal_gpio.c
+SRCS += stm32g0xx_hal_gpio.c stm32g0xx_hal_uart.c stm32g0xx_hal_uart_ex.c stm32g0xx_hal_dma.c
+SRCS += stm32g0xx_hal_rcc_ex.c stm32g0xx_hal_rtc.c stm32g0xx_hal_rtc_ex.c app_clock.c app_serial.c
+SRCS += stm32g0xx_hal_pwr_ex.c stm32g0xx_hal_wwdg.c stm32g0xx_hal_spi.c lcd.c queue.c stm32g0xx_hal_tim.c
+SRCS += stm32g0xx_hal_tim_ex.c temp.c stm32g0xx_hal_i2c_ex.c stm32g0xx_hal_i2c.c
 #archivo linker a usar
 LINKER = linker.ld
 #Simbolos gloobales del programa (#defines globales)
@@ -26,6 +29,7 @@ CFLAGS += -ffunction-sections -fdata-sections
 CFLAGS += -MMD -MP
 AFLAGS = $(CPU)
 LFLAGS = $(CPU) -Wl,--gc-sections --specs=rdimon.specs --specs=nano.specs -Wl,-Map=Build/$(TARGET).map
+#LDFLAGS = $(CPU) -Wl,--gc-sections --specs=rdimon.specs -lc -lrdimon
 
 #substituccion de prefijos y postfijos 
 OBJS = $(SRCS:%.c=Build/obj/%.o)
@@ -69,6 +73,10 @@ flash :
 open :
 #	openocd -f interface/stlink.cfg -f target/stm32g0x.cfg -c "reset_config srst_only srst_nogate"
 	JLinkGDBServer -if SWD -device stm32g0b1re -nogui
+
+#---check misra------------------------------------------------------------------------------------
+misra_test :
+	cppcheck --addon=misra.json --template=gcc --inline-suppr --force --std=c99 --quiet app/
 
 #---launch a debug session, NOTE: is mandatory to previously open a debug server session-----------
 debug :

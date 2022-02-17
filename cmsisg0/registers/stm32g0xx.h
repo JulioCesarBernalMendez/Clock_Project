@@ -62,7 +62,7 @@
  && !defined (STM32G0B0xx) && !defined (STM32G0B1xx) && !defined (STM32G0C1xx) \
  && !defined (STM32G050xx) && !defined (STM32G051xx) && !defined (STM32G061xx)
   /* #define STM32G0B0xx */   /*!< STM32G0B0xx Devices */
-  /* #define STM32G0B1xx */   /*!< STM32G0B1xx Devices */
+     #define STM32G0B1xx      /*!< STM32G0B1xx Devices */
   /* #define STM32G0C1xx */   /*!< STM32G0C1xx Devices */
   /* #define STM32G070xx */   /*!< STM32G070xx Devices */
   /* #define STM32G071xx */   /*!< STM32G071xx Devices */
@@ -84,7 +84,7 @@
    In this case, these drivers will not be included and the application code will
    be based on direct access to peripherals registers
    */
-  /*#define USE_HAL_DRIVER */
+    #define USE_HAL_DRIVER
 #endif /* USE_HAL_DRIVER */
 
 /**
